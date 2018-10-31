@@ -1,14 +1,41 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>
-      Ionic Blank
+      Ionic draw
     </ion-title>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+<ion-content padding no-bounce>
+  <div #fixedContainer ion-fixed>
+    <ion-row>
+      <ion-col *ngFor="let color of colors" [style.background]="color"
+      class="color-block" tappable (click)="onSelectColor(color)">
+      </ion-col>
+    </ion-row>
+    <ion-row radio-group [(ngModel)]="selectedColor">
+      <ion-col *ngFor="let color of colors" text-center>
+        <ion-radio [value]="color"></ion-radio>
+      </ion-col>
+    </ion-row>
+    <div class="wrap-draw">
+      <canvas #imageCanvas (touchstart)="startDrawing($event)" (touchmove)="moved($event)"></canvas>
+      <img src="assets/imgs/sutrix-epi.jpg" alt="">
+    </div>
+    <button ion-button full (click)="saveCanvasImage()">Save Image</button>
+
+    <ion-list *ngIf="storedImages.lenght > 0">
+      <ion-list-header>Previous Drawings</ion-list-header>
+      <ion-card *ngFor="let obj of storedImages; let i = index">
+        <ion-card-content>
+          <img [src]="getImagePath(obj)" >
+        </ion-card-content>
+        <ion-row>
+          <button ion-button icon-only full color="danger" (click)="removeImageAtIndex(i)">
+            <ion-icon name="trash"></ion-icon>
+          </button>
+        </ion-row>
+      </ion-card>
+    </ion-list>
+  </div>
 </ion-content>

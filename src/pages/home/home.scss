@@ -1,3 +1,19 @@
 page-home {
+  .color-block {
+    height: 40px;
+  }
+  canvas {
+    display: block;
+  }
+  .wrap-draw {
+    position: relative;
+    img {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: auto;
+      z-index: -1;
+    }
+  }
 
 }
