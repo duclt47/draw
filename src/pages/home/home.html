@@ -20,7 +20,7 @@
     </ion-row>
     <div class="wrap-draw">
       <canvas #imageCanvas (touchstart)="startDrawing($event)" (touchmove)="moved($event)"></canvas>
-      <img src="assets/imgs/sutrix-epi.jpg" alt="">
+      <img #image src="assets/imgs/img_test.jpg" alt="">
     </div>
     <button ion-button full (click)="saveCanvasImage()">Save Image</button>
 

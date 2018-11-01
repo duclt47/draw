@@ -1,6 +1,5 @@
-import { File, IWriteOptions  } from '@ionic-native/file';
 import { Component, ViewChild } from '@angular/core';
-import { NavController, Content, Platform, normalizeURL } from 'ionic-angular';
+import { NavController, Content, Platform } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
 const STORAGE_KEY = 'IMAGE_LIST';
@@ -23,11 +22,13 @@ export class HomePage {
   @ViewChild(Content) content: Content;
   @ViewChild ('fixedContainer') fixedContainer: any;
 
+  
+  @ViewChild('image') image: any;
+  imageElement: any;
   constructor(
     public navCtrl: NavController,
     public storage: Storage,
     private plt: Platform,
-    private file: File,
   ) {
     this.storage.ready().then(() => {
       this.storage.get(STORAGE_KEY).then(data => {
@@ -48,8 +49,12 @@ export class HomePage {
 
   ionViewDidLoad() {
     this.canvasElement = this.canvas.nativeElement;
+    this.imageElement = this.image.nativeElement;
     this.canvasElement.width = this.plt.width() + '';
     this.canvasElement.height = 200;
+    console.log('this.imageElement', this.imageElement);
+    let ctx = this.canvasElement.getContext('2d');
+    ctx.drawImage(this.imageElement, 0, 0, 375, 200);
   }
 
   onSelectColor(color) {
@@ -91,64 +96,17 @@ export class HomePage {
     let ctx = this.canvasElement.getContext('2d');
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    let name = new Date().getTime() + '.png';
-    let path = this.file.dataDirectory;
-    let options: IWriteOptions = { replace: true };
-
     var data = dataUrl.split(',')[1];
-    let blob = this.b64toBlob(data, 'image/png');
-    
-    this.file.writeFile(path, name, blob, options).then((res) => {
-      this.saveImage(name);
-    }, error => {
-      console.log('error', error);
-    });
-  }
+    this.storedImages.push(data);
 
-  saveImage(imageName) {
-    let saveObj = { img: imageName };
-    this.storedImages.push(saveObj);
-    console.log('this.storedImages',this.storedImages);
-    this.storage.set(STORAGE_KEY, this.storedImages).then(() => {
-      this.content.scrollToBottom();
-    });
   }
 
   removeImageAtIndex(index) {
-    let removed = this.storedImages.splice(index, 1);
-    this.file.removeFile(this.file.dataDirectory, removed[0].img).then(res => {
-    }, err => {
-      console.log('remove err; ' ,err);
-    });
-    this.storage.set(STORAGE_KEY, this.storedImages);
+    this.storedImages.splice(index, 1);
   }
    
-  getImagePath(imageName) {
-    let path = this.file.dataDirectory + imageName;
-    path = normalizeURL(path);
-    return path;
+  getImagePath(base64) {
+    return 'data:image/png;base64,' + base64 ;
   }
 
-  b64toBlob(b64Data, contentType) {
-    contentType = contentType || '';
-    var sliceSize = 512;
-    var byteCharacters = atob(b64Data);
-    var byteArrays = [];
-   
-    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-      var slice = byteCharacters.slice(offset, offset + sliceSize);
-   
-      var byteNumbers = new Array(slice.length);
-      for (var i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-   
-      var byteArray = new Uint8Array(byteNumbers);
-   
-      byteArrays.push(byteArray);
-    }
-   
-    var blob = new Blob(byteArrays, { type: contentType });
-    return blob;
-  }
 }
