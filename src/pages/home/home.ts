@@ -1,4 +1,4 @@
-import { File } from '@ionic-native/file';
+import { File, IWriteOptions  } from '@ionic-native/file';
 import { Component, ViewChild } from '@angular/core';
 import { NavController, Content, Platform, normalizeURL } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
@@ -29,10 +29,12 @@ export class HomePage {
     private plt: Platform,
     private file: File,
   ) {
-    this.storage.ready().then((data: any) => {
-      if (data !== null) {
-        this.storedImages = data;
-      }
+    this.storage.ready().then(() => {
+      this.storage.get(STORAGE_KEY).then(data => {
+        if (data != undefined) {
+          this.storedImages = data;
+        }
+      });
     });
   }
 
@@ -91,11 +93,12 @@ export class HomePage {
 
     let name = new Date().getTime() + '.png';
     let path = this.file.dataDirectory;
+    let options: IWriteOptions = { replace: true };
 
     var data = dataUrl.split(',')[1];
     let blob = this.b64toBlob(data, 'image/png');
-
-    this.file.writeFile(path, name, blob).then((res) => {
+    
+    this.file.writeFile(path, name, blob, options).then((res) => {
       this.saveImage(name);
     }, error => {
       console.log('error', error);
@@ -104,8 +107,8 @@ export class HomePage {
 
   saveImage(imageName) {
     let saveObj = { img: imageName };
-    console.log(saveObj);
     this.storedImages.push(saveObj);
+    console.log('this.storedImages',this.storedImages);
     this.storage.set(STORAGE_KEY, this.storedImages).then(() => {
       this.content.scrollToBottom();
     });
@@ -122,7 +125,6 @@ export class HomePage {
    
   getImagePath(imageName) {
     let path = this.file.dataDirectory + imageName;
-    // https://ionicframework.com/docs/wkwebview/#my-local-resources-do-not-load
     path = normalizeURL(path);
     return path;
   }

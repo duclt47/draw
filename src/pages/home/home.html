@@ -24,7 +24,7 @@
     </div>
     <button ion-button full (click)="saveCanvasImage()">Save Image</button>
 
-    <ion-list *ngIf="storedImages.lenght > 0">
+    <ion-list *ngIf="storedImages.length > 0">
       <ion-list-header>Previous Drawings</ion-list-header>
       <ion-card *ngFor="let obj of storedImages; let i = index">
         <ion-card-content>
