@@ -8,6 +8,6 @@
 
 
 <ion-content padding>
-  <canvas #imageCanvas></canvas>
-  <img #image src="assets/imgs/img_test.jpg" alt="">
+    <img #img src="assets/imgs/img_test.jpg" (load)="afterLoading()" /> 
+    <canvas #visualization width={{imgWidth}} height={{imgHeight}}></canvas>
 </ion-content>

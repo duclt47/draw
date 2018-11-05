@@ -52,8 +52,12 @@ export class HomePage {
     this.imageElement = this.image.nativeElement;
     this.canvasElement.width = this.plt.width() + '';
     this.canvasElement.height = 200;
-    console.log('this.imageElement', this.imageElement);
+    
+  }
+
+  afterLoading() {
     let ctx = this.canvasElement.getContext('2d');
+
     ctx.drawImage(this.imageElement, 0, 0, 375, 200);
   }
 

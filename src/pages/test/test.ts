@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 
 /**
@@ -15,21 +15,34 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class TestPage {
 
-  @ViewChild('imageCanvas') canvas: any;
-  canvasElement: any;
-  @ViewChild('imageCanvas') image: any;
-  imageElement: any;
+  @ViewChild("visualization") visualization: ElementRef;
+  @ViewChild('img') img: ElementRef;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  private context: CanvasRenderingContext2D;
+  private element: HTMLImageElement;
+
+  src: string;
+  imgWidth: number;
+  imgHeight: number;
+
+  constructor() {
+    this.imgWidth = 400;
+    this.imgHeight = 400;
+    this.src = '';
+  }
+
+  ngAfterViewInit() {
+    this.context = this.visualization.nativeElement.getContext("2d");
+    this.element = this.img.nativeElement;
   }
 
   ionViewDidLoad() {
-    this.canvasElement = this.canvas.nativeElement;
-    this.imageElement = this.image.nativeElement;
+    
+  }
 
-    let ctx = this.canvasElement.getContext('2d');
 
-    ctx.drawImage(this.imageElement, 0, 0);
+  afterLoading(){
+    this.context.drawImage(this.element, 0, 0);
   }
 
 }

@@ -20,11 +20,12 @@
     </ion-row>
     <div class="wrap-draw">
       <canvas #imageCanvas (touchstart)="startDrawing($event)" (touchmove)="moved($event)"></canvas>
-      <img #image src="assets/imgs/img_test.jpg" alt="">
+      <img #image src="assets/imgs/img_test.jpg" alt="" (load)="afterLoading()" style="display: none">
     </div>
     <button ion-button full (click)="saveCanvasImage()">Save Image</button>
+  </div>
 
-    <ion-list *ngIf="storedImages.length > 0">
+    <ion-list>
       <ion-list-header>Previous Drawings</ion-list-header>
       <ion-card *ngFor="let obj of storedImages; let i = index">
         <ion-card-content>
@@ -37,5 +38,4 @@
         </ion-row>
       </ion-card>
     </ion-list>
-  </div>
 </ion-content>

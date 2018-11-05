@@ -10,7 +10,7 @@ import { TestPage } from '../pages/test/test';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = TestPage;
+  rootPage:any = HomePage;
 
   constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
     platform.ready().then(() => {
